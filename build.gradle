@@ -63,7 +63,7 @@ publishing {
             }
         }
         maven {
-            name = "production"
+            name = "release"
             url = uri("https://repo.towerdefence.cc/releases")
             credentials {
                 username = System.getenv("MAVEN_USERNAME")
