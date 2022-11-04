@@ -1,8 +1,6 @@
 package cc.towerdefence.api.agonessdk;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import dev.agones.allocation.AllocationProto;
-import dev.agones.allocation.AllocationServiceGrpc;
 import dev.agones.sdk.AgonesSDKProto;
 import dev.agones.sdk.SDKGrpc;
 import io.grpc.stub.StreamObserver;
@@ -18,11 +16,16 @@ public class AgonesUtils {
     private static final ThreadFactory THREAD_FACTORY = threadFactory();
 
     private static final String POD_NAME = System.getenv("HOSTNAME");
+    private static StreamObserver<AgonesSDKProto.Empty> HEALTH_STREAM;
 
     public static void startHealthTask(SDKGrpc.SDKStub stub, long period, TimeUnit unit) {
-        StreamObserver<AgonesSDKProto.Empty> healthStream = stub.health(new EmptyStreamObserver<>());
+        HEALTH_STREAM = stub.health(new EmptyStreamObserver<>());
         Executors.newSingleThreadScheduledExecutor(THREAD_FACTORY)
-                .scheduleAtFixedRate(() -> healthStream.onNext(AgonesSDKProto.Empty.getDefaultInstance()), 0, period, unit);
+                .scheduleAtFixedRate(() -> HEALTH_STREAM.onNext(AgonesSDKProto.Empty.getDefaultInstance()), 0, period, unit);
+    }
+
+    public static void shutdownHealthTask() {
+        HEALTH_STREAM.onCompleted();
     }
 
     private static ThreadFactory threadFactory() {
