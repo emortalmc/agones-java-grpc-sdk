@@ -1,4 +1,4 @@
-package cc.towerdefence.api.agonessdk;
+package dev.emortal.api.agonessdk;
 
 import io.grpc.stub.StreamObserver;
 import org.slf4j.Logger;

@@ -1,4 +1,4 @@
-package cc.towerdefence.api.agonessdk;
+package dev.emortal.api.agonessdk;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import dev.agones.sdk.AgonesSDKProto;

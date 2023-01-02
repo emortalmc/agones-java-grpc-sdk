@@ -6,7 +6,7 @@ plugins {
     id "com.google.protobuf" version "0.8.18"
 }
 
-group "cc.towerdefence.api.agonessdk"
+group "dev.emortal.api.agonessdk"
 version "1.0-SNAPSHOT"
 
 repositories {
@@ -52,11 +52,10 @@ sourceSets {
 }
 
 publishing {
-
     repositories {
         maven {
             name = "development"
-            url = uri("https://repo.towerdefence.cc/snapshots")
+            url = uri("https://repo.emortal.dev/snapshots")
             credentials {
                 username = System.getenv("MAVEN_USERNAME")
                 password = System.getenv("MAVEN_SECRET")
@@ -64,7 +63,7 @@ publishing {
         }
         maven {
             name = "release"
-            url = uri("https://repo.towerdefence.cc/releases")
+            url = uri("https://repo.emortal.dev/releases")
             credentials {
                 username = System.getenv("MAVEN_USERNAME")
                 password = System.getenv("MAVEN_SECRET")
@@ -74,7 +73,7 @@ publishing {
 
     publications {
         maven(MavenPublication) {
-            groupId = 'cc.towerdefence.api'
+            groupId = 'dev.emortal.api'
             artifactId = 'agones-sdk'
 
             def commitHash = System.getenv("COMMIT_HASH_SHORT")
