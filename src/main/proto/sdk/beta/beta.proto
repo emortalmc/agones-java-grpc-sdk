@@ -15,11 +15,22 @@
 syntax = "proto3";
 
 package agones.dev.sdk.beta;
-option go_package = "beta";
+option go_package = "./beta";
 option java_package = "dev.agones.sdk.beta";
 option java_outer_classname = "BetaAgonesSDKProto";
 
 import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "beta.proto";
+    version: "version not set";
+  };
+  schemes: HTTP;
+  consumes: "application/json";
+  produces: "application/json";
+};
 
 // SDK service to be used in the GameServer SDK to the Pod Sidecar
 service SDK {}
