@@ -11,8 +11,8 @@ plugins {
 group = "dev.emortal.api.agonessdk"
 version = "1.0-SNAPSHOT"
 
-val grpcVersion = "1.50.2"
-val protobufVersion = "3.21.7"
+val grpcVersion = "1.63.0"
+val protobufVersion = "4.26.1"
 val protocVersion = protobufVersion
 
 repositories {
@@ -25,11 +25,11 @@ dependencies {
     api("io.grpc:grpc-stub:$grpcVersion")
     api("io.grpc:grpc-netty:$grpcVersion")
 
-    api("javax.annotation:javax.annotation-api:1.3.2")
-    implementation("org.slf4j:slf4j-api:2.0.3")
+    api("jakarta.annotation:jakarta.annotation-api:3.0.0")
+    implementation("org.slf4j:slf4j-api:2.0.13")
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.2")
 }
 
 protobuf {
@@ -52,7 +52,7 @@ protobuf {
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(20))
+        languageVersion.set(JavaLanguageVersion.of(21))
     }
 }
 
