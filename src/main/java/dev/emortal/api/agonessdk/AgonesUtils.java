@@ -3,6 +3,7 @@ package dev.emortal.api.agonessdk;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import dev.agones.sdk.AgonesSDKProto;
 import dev.agones.sdk.SDKGrpc;
+import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,9 +20,32 @@ public class AgonesUtils {
     private static StreamObserver<AgonesSDKProto.Empty> HEALTH_STREAM;
 
     public static void startHealthTask(SDKGrpc.SDKStub stub, long period, TimeUnit unit) {
+        waitForSidecar(stub);
+
         HEALTH_STREAM = stub.health(new EmptyStreamObserver<>());
         Executors.newSingleThreadScheduledExecutor(THREAD_FACTORY)
                 .scheduleAtFixedRate(() -> HEALTH_STREAM.onNext(AgonesSDKProto.Empty.getDefaultInstance()), 0, period, unit);
+    }
+
+    private static void waitForSidecar(SDKGrpc.SDKStub stub) {
+        boolean sidecarAvailable = false;
+        int tries = 0;
+        while (!sidecarAvailable) {
+            if (++tries > 10) throw new RuntimeException("Agones sidecar not ready after 10 tries");
+
+            try {
+                stub.health(new EmptyStreamObserver<>());
+                sidecarAvailable = true;
+            } catch (StatusRuntimeException e) {
+                LOGGER.warn("Agones sidecar not ready, retrying in 500ms...");
+                try {
+                    TimeUnit.MILLISECONDS.sleep(500);
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException("Thread interrupted while waiting for Agones sidecar", ie);
+                }
+            }
+        }
     }
 
     public static void shutdownHealthTask() {
